@@ -3,86 +3,112 @@ import BookCard from '../books/BookCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import { Navigation } from 'swiper/modules'
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation'
-
 import '../../App.css';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import {
+  ArchiveBoxXMarkIcon,
+  ChevronDownIcon,
+  PencilIcon,
+  Square2StackIcon,
+  TrashIcon,
+} from '@heroicons/react/16/solid'
 
 const categories = ["Choose a genre", "Business", "Fiction", "Horror", "Adventure"]
 
 const TopSellers = () => {
 
-    const [books, setBooks] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
-    
-    useEffect(() => {
-        fetch("books.json")
-        .then((res) => res.json())
-        .then((data) => setBooks(data))
-    }, [])
+  const [books, setBooks] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
 
-    const filteredBooks = selectedCategory === "Choose a genre" ? books : books.filter(books => books.category === selectedCategory.toLowerCase())
+  useEffect(() => {
+    fetch("books.json")
+      .then((res) => res.json())
+      .then((data) => setBooks(data))
+  }, [])
 
-    console.log(filteredBooks)
+  const filteredBooks = selectedCategory === "Choose a genre" ? books : books.filter(books => books.category === selectedCategory.toLowerCase())
 
+  // console.log(filteredBooks)
 
   return (
-      <div className='py-10'>
-          <h2 className='text-3xl font-semibold mb-6'>
-              Top Sellers
-          </h2>
+    <div className='py-10'>
+      <h2 className='text-3xl font-semibold mb-6'>
+        Top Sellers
+      </h2>
 
-          {/* Category filter */}
+      {/* Category filter */}
 
-          <div className='mb-8 flex items-center'>
-              <select
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                  name="category" id="category" className='border bg-[#EAEAEA] border-gray-300 rounded-md px-4 py-2 focus:outline-none'>
-                  {
-                      categories.map((category, index) => (
-                      <option key={index} value={ category }>{category}</option>
-                    ))
-                  }
-              </select>
+      {/* Dropdown from Headless UI */}
+      
+      <Menu as="div" className="relative inline-block text-left py-4">
+        <div>
+          <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+            {selectedCategory}
+            <ChevronDownIcon aria-hidden="true" className="-mr-1 h-5 w-5 text-gray-400" />
+          </MenuButton>
+        </div>
+
+        <MenuItems
+          anchor="bottom start"
+          transition
+          className="absolute right-0 z-10 mt-2 w-56  rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+        >
+          <div className="py-1">
+            {
+              categories.map((category, index) => (
+                <MenuItem key={index}>
+                  <a
+                    onClick={(e) => (setSelectedCategory(category))}
+                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
+                  >
+                    {category}
+                  </a>
+                </MenuItem>
+              ))
+            }
+            
           </div>
+        </MenuItems>
+      </Menu>
 
-          <Swiper
-            slidesPerView={1}
-              spaceBetween={30}
-              navigation={true}
-            breakpoints={{
-                500: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-                },
-                768: {
-                slidesPerView: 2,
-                spaceBetween: 40,
-                },
-                1024: {
-                slidesPerView: 2,
-                spaceBetween: 50,
-                },
-                1180: {
-                slidesPerView: 3,
-                spaceBetween: 50,
-                }
-            }}
-            modules={[Pagination, Navigation]}
-            className="mySwiper"
-            >
-                {
-                  filteredBooks.length > 0 && filteredBooks.map((book, index) => (    
-                      <SwiperSlide key={index}>
-                          <BookCard key={index} book={book} />
-                      </SwiperSlide>
-                  ))
-                  
-              }
-          </Swiper>
+      {/* Slider */}
+
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={30}
+        navigation={true}
+        breakpoints={{
+          500: {
+            slidesPerView: 1,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 40,
+          },
+          1024: {
+            slidesPerView: 2,
+            spaceBetween: 50,
+          },
+          1180: {
+            slidesPerView: 3,
+            spaceBetween: 50,
+          }
+        }}
+        modules={[Pagination, Navigation]}
+        className="mySwiper">
+        {
+          filteredBooks.length > 0 && filteredBooks.map((book, index) => (
+            <SwiperSlide key={index}>
+              <BookCard key={index} book={book} />
+            </SwiperSlide>
+          ))
+
+        }
+      </Swiper>
 
     </div>
   )
