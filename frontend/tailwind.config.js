@@ -15,11 +15,12 @@ export default {
       },
       fontFamily: {
         'primary' : ["Montserrat", "sans-serif"],
-        'secondary' : ["Nunito Sans", "sans-serif"]
+        'secondary': ["Nunito Sans", "sans-serif"],
+        'poppins': ["Poppins", "sans-serif"]
       }
     },
     screens: {
-      'sm': '500px',
+      'sm': '600px',
       // => @media (min-width: 640px) { ... }
 
       'md': '800px',

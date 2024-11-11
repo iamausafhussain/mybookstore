@@ -1,0 +1,59 @@
+.main-login {
+    background-color: #E5E5E5;
+    color: black;
+    font-weight: bold;
+    height: 100vh;
+    display: flex;
+}
+
+.left-login-section {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+}
+
+.left-login-image {
+    flex: .1;
+}
+
+.left-login-sign {
+    flex: .9;
+    padding-top: 120px;
+}
+
+
+
+@media only screen and (max-width: 768px) {
+    .main-login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-login-section {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .left-login-wrapper {
+        display: flex;
+        align-items: center;
+    }
+
+    .left-login-image {
+        flex: 1;
+    }
+
+    .left-login-sign {
+        flex: 1;
+        padding-top: 10px;
+    }
+
+    .saly-image {
+        display: none;
+    }
+}
