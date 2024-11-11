@@ -12,7 +12,7 @@ export const KbarInput = () => {
   return (
     <button
       onClick={onClick}
-      className="w-10 lg:w-36 h-10 border-[1px] bg-transparent rounded-lg font-medium border-slate-200 dark:border-slate-800 font-primary text-slate-500 hover:text-slate-700 dark:hover:text-slate-300  hover:bg-transparent dark:hover:bg-slate-800"
+      className="w-10 lg:w-36 h-10 border-[1px] bg-transparent rounded-lg font-medium border-slate-500 dark:border-slate-800 font-primary text-slate-500 hover:text-slate-700 dark:hover:text-slate-300  hover:bg-transparent dark:hover:bg-slate-800"
     >
       <div className="items-center justify-between hidden px-3 lg:flex">
         Search...

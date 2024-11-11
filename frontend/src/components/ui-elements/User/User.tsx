@@ -1,43 +1,66 @@
 import {
-  IdentificationIcon,
-  SunIcon,
-  MoonIcon,
-  AdjustmentsVerticalIcon,
-  ExclamationCircleIcon,
+  ArrowRightStartOnRectangleIcon,
+  Squares2X2Icon,
+  ShoppingBagIcon,
+  HeartIcon
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 
 const User = () => {
   const [theme, setTheme] = useState("Light Theme");
+  const navigate = useNavigate();
 
   const ms = new Date().getUTCMilliseconds();
 
   const items = [
     {
-      title: "Profile",
-      icon: <IdentificationIcon />,
+      title: "Admin Dashboard",
+      icon: <Squares2X2Icon />,
       color: "bg-indigo-300 dark:bg-indigo-800",
-      onclick: () => {},
+      href: "/dashboard",
+      onclick: () => {navigateTo('/dashboard')},
+    },
+    {
+      title: "Orders",
+      icon: <ShoppingBagIcon />,
+      color: "bg-teal-300 dark:bg-teal-800",
+      href: "/orders",
+      onclick: () => {navigateTo('/orders')},
+    },
+    {
+      title: "Favourites",
+      icon: <HeartIcon />,
+      color: "bg-fuchsia-300 dark:bg-fuchsia-800",
+      href: "/favourites",
+      onclick: () => {navigateTo('/favourites')},
     },
     // {
     //   title: theme === "light" ? "Dark theme" : "Light theme",
     //   icon: theme === "light" ? <MoonIcon /> : <SunIcon />,
     //   color: "bg-teal-300 dark:bg-teal-800",
+    //   href: "/dashboard",
     //   onclick: () => onChangeThemeClick(),
     // },
-    {
-      title: "Settings",
-      icon: <AdjustmentsVerticalIcon />,
-      color: "bg-fuchsia-300 dark:bg-fuchsia-800",
-      onclick: () => {},
-    },
+    // {
+    //   title: "Settings",
+    //   icon: <AdjustmentsVerticalIcon />,
+    //   color: "bg-fuchsia-300 dark:bg-fuchsia-800",
+    //   href: "/settings",
+    //   onclick: () => {},
+    // },
     {
       title: "Logout",
-      icon: <ExclamationCircleIcon />,
+      icon: <ArrowRightStartOnRectangleIcon />,
       color: "bg-red-300 dark:bg-red-800",
-      onclick: () => {},
+      href: "/login",
+      onclick: () => {navigateTo('/login')},
     },
   ];
+
+  const navigateTo = (path) => {
+    navigate(path);
+  };
 
   const onChangeThemeClick = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -71,7 +94,7 @@ const User = () => {
             <div
               className={`h-10 w-10 ml-5 flex items-center justify-center rounded-lg ${item.color}`}
             >
-              <div className="w-3/5 text-gray-800 h-3/5 dark:text-gray-200">
+              <div className="w-3/5 h -3/5 text-gray-800 dark:text-gray-200">
                 {item.icon}
               </div>
             </div>
