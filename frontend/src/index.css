@@ -12,6 +12,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+select{
+  background-color: inherit;
+}
+
 body {
   margin: 0;
   padding: 0;
