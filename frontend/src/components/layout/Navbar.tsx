@@ -22,7 +22,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="flex items-center h-16 px-3 m-0 md:px-4 dark:bg-gray-900 bg-gray-50 font-primary">
+      <nav className="flex items-center h-16 px-3 m-0 md:px-4 dark:bg-gray-900 bg-gray-50 font-primary bg-gradient-to-t from-purple-50 via-purple-100 to-purple-200">
         <div className="flex items-center justify-between w-full md:mx-4 lg:mx-8 2xl:w-[80em] 2xl:mx-auto">
           <div className="flex items-center justify-center">
             <div className="md:hidden">
