@@ -40,8 +40,6 @@ const TopSellers = () => {
       </h2>
 
       {/* Category filter */}
-
-      {/* Dropdown from Headless UI */}
       
       <Menu as="div" className="relative inline-block text-left py-4">
         <div>
@@ -102,7 +100,7 @@ const TopSellers = () => {
         className="mySwiper">
         {
           filteredBooks.length > 0 && filteredBooks.map((book, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} className='px-4 py-4 rounded-md'>
               <BookCard key={index} book={book} />
             </SwiperSlide>
           ))
