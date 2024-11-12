@@ -17,7 +17,7 @@ const SignIn = () => {
 
                 {/* Sign in */}
 
-                <h1 className='font-medium text-3xl'>Sign in</h1>
+                <h1 className='login-signin-text font-medium text-xl md:text-3xl py-5'>Sign in</h1>
 
                 {/* Email */}
 
@@ -56,7 +56,7 @@ const SignIn = () => {
 
 
                 <div className='login-forgot-password pt-4'>
-                    <p className='font-poppins font-light text-end text-sm'>Forgot Password?</p>
+                    <p className='font-poppins font-light text-end text-xs md:text-sm'>Forgot Password?</p>
                 </div>
 
                 <div className="login-button text-center pt-10">
@@ -68,32 +68,32 @@ const SignIn = () => {
                 {/* O Auth Login Section */}
 
                 <div className='w-full py-10 flex flex-col items-center justify-center'>
-                    <p className='font-medium text-gray-400'>or continue with</p>
+                    <p className='font-medium text-gray-400 text-xs md:text-sm'>or continue with</p>
 
                     {/* Large Devices */}
 
                     <div className='o-auth-login-large flex flex-col items-center justify-center'>
                         <button className='pt-4'>
-                            <img src={SignInApple} alt="O Auth Login" className='w-52'/>
+                            <img src={SignInApple} alt="O Auth Login" className='w-60 object-cover'/>
                         </button>
                         <button className='pt-4'>
-                            <img src={SignInGoogle} alt="O Auth Login" className='w-52'/>
+                            <img src={SignInGoogle} alt="O Auth Login" className='w-60 object-cover'/>
                         </button>
                         <button className='pt-4'>
-                            <img src={SignInFacebook} alt="O Auth Login" className='w-52'/>
+                            <img src={SignInFacebook} alt="O Auth Login" className='w-60 object-cover'/>
                         </button>
                     </div>
 
                     {/* Mobile Devices */}
 
                     <div className='o-auth-login-small items-center justify-center pt-5'>
-                        <button>
+                        <button className=' '>
                             <img src={AppleLogo} alt="O Auth Login" className=''/>
                         </button>
-                        <button className='pl-4'>
+                        <button className='pl-4 '>
                             <img src={GoogleLogo} alt="O Auth Login" className=''/>
                         </button>
-                        <button className='pl-4'>
+                        <button className='pl-4 '>
                             <img src={FacebookLogo} alt="O Auth Login" className=''/>
                         </button>
                     </div>

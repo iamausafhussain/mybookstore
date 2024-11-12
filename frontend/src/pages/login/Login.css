@@ -32,7 +32,7 @@
 }
 
 .login-wrapper {
-    width: 50%;
+    width: 60%; 
 }
 
 .login-input {
@@ -47,8 +47,8 @@
     width: 100%;
 }
 
-.o-auth-login-large {
-
+.o-auth-login-small {
+    display: none;
 }
 
 @media only screen and (max-width: 600px) {
@@ -58,16 +58,10 @@
     .input,
     .login-password-input,
     .passsword-input,
-    .login-forgot-password {
+    .login-forgot-password, .login-wrapper {
         width: 100%;
     }
 }
-
-.o-auth-login-small {
-    display: none;
-}
-
-
 
 @media only screen and (max-width: 768px) {
     .main-login {
@@ -111,15 +105,24 @@
         justify-content: center;
     }
 
-    .login-wrapper {
-        width: 60%;
-    }
-
     .o-auth-login-large {
         display: none;
     }
 
     .o-auth-login-small {
         display: flex;
+    }
+
+    .login-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+}
+
+@media only screen and (max-width: 768px) and (min-width: 600px) {
+    .login-wrapper {
+        width: 60%; /* Set to 60% */
     }
 }
