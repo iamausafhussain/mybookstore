@@ -4,6 +4,7 @@ import {
 import App from '../App.jsx';
 import Home from "../pages/home/Home.jsx";
 import Login from "../pages/login/Login.jsx";
+import Signup from "../pages/signup/Signup.jsx";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/signup",
+        element: <Signup />
     }
 ]);
 
