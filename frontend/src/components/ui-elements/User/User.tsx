@@ -5,11 +5,13 @@ import {
   HeartIcon
 } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 
 const User = () => {
   const [theme, setTheme] = useState("Light Theme");
   const navigate = useNavigate();
+  const cartItems = useSelector(state => state.cart.cartItems);
 
   const ms = new Date().getUTCMilliseconds();
 
@@ -22,11 +24,11 @@ const User = () => {
       onclick: () => {navigateTo('/dashboard')},
     },
     {
-      title: "Orders",
+      title: `Cart [${cartItems.length}]`,
       icon: <ShoppingBagIcon />,
       color: "bg-teal-300 dark:bg-teal-800",
-      href: "/orders",
-      onclick: () => {navigateTo('/orders')},
+      href: "/cart",
+      onclick: () => {navigateTo('/cart')},
     },
     {
       title: "Favourites",
