@@ -15,7 +15,7 @@ const Register = () => {
         <div className='login'>
             <div className='login-wrapper w-20 flex flex-col items-start'>
 
-                {/* Sign in */}
+                {/* Sign in Header*/}
 
                 <h1 className='login-signin-text font-medium text-xl md:text-3xl py-5'>Sign up</h1>
 
@@ -91,7 +91,7 @@ const Register = () => {
                 </div>
 
                 <div className="login-button text-center pt-10">
-                    <Button className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 text-sm font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
+                    <Button className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
                         <p>Register</p>
                     </Button>
                 </div>
@@ -103,7 +103,7 @@ const Register = () => {
 
                     {/* Large Devices */}
 
-                    <div className='o-auth-login-large flex flex-col items-center justify-center'>
+                    {/* <div className='o-auth-login-large flex flex-col items-center justify-center'>
                         <button onClick={() => { console.log('Sign In with Apple') }} className='pt-4'>
                             <img src={SignInApple} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
@@ -113,11 +113,11 @@ const Register = () => {
                         <button className='pt-4'>
                             <img src={SignInFacebook} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
-                    </div>
+                    </div> */}
 
                     {/* Mobile Devices */}
 
-                    <div className='o-auth-login-small items-center justify-center pt-5'>
+                    <div className='items-center justify-center pt-5'>
                         <button className=' '>
                             <img src={AppleLogo} alt="O Auth Login" className='' />
                         </button>

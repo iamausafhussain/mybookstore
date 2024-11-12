@@ -60,7 +60,7 @@ const SignIn = () => {
                 </div>
 
                 <div className="login-button text-center pt-10">
-                    <Button className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 text-sm font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
+                    <Button className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
                         <p>Login</p>
                     </Button>
                 </div>
