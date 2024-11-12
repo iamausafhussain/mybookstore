@@ -3,6 +3,7 @@ import "./Login.css"
 import { Link } from 'react-router-dom'
 import BookStoreLogoLight from '../../assets/BookStoreLogoLight.png'
 import SalyImage from '../../assets/login/SalyImage.png'
+import SignIn from './SignIn'
 
 const Login = () => {
     return (
@@ -21,7 +22,7 @@ const Login = () => {
                         <h1 className='font-semibold text-3xl md:text-5xl'>Sign in to</h1>
                         <p className='font-medium text-xl md:text-3xl py-4'>Start your success story!</p>
                         <p className="font-normal sm:pt-4 md:pt-10">If you don’t have an account,</p>
-                        <p className="font-normal py-2">You can <Link to="#" className='text-purple-600'>Register here !</Link></p>
+                        <p className="font-normal py-2">You can <Link to="#" className='text-[#4D47C3]'>Register here!</Link></p>
                     </div>
                 </div>
 
@@ -30,8 +31,8 @@ const Login = () => {
 
             {/* Right Section */}
 
-            <div className="right-login-section w-1/2 flex flex-col">
-                <p>Rigt Side item</p>
+            <div className="right-login-section md:w-1/2 sm:w-full flex items-center justify-center">
+                <SignIn />
             </div>
 
         </div>

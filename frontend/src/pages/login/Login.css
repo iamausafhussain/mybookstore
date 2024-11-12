@@ -1,5 +1,5 @@
 .main-login {
-    background-color: #E5E5E5;
+    background-color: #ffffff;
     color: black;
     font-weight: bold;
     height: 100vh;
@@ -21,6 +21,50 @@
 .left-login-sign {
     flex: .9;
     padding-top: 120px;
+}
+
+/* Sign In Styles */
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.login-wrapper {
+    width: 50%;
+}
+
+.login-input {
+    width: 100%;
+}
+
+.input,
+.login-password-input,
+.login-forgot-password,
+.login-button,
+.passsword-input {
+    width: 100%;
+}
+
+.o-auth-login-large {
+
+}
+
+@media only screen and (max-width: 600px) {
+    /* Sign In Styles */
+
+    .login-input,
+    .input,
+    .login-password-input,
+    .passsword-input,
+    .login-forgot-password {
+        width: 100%;
+    }
+}
+
+.o-auth-login-small {
+    display: none;
 }
 
 
@@ -55,5 +99,27 @@
 
     .saly-image {
         display: none;
+    }
+
+    /* Sign In Styles */
+
+    .login,
+    .login-input {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-wrapper {
+        width: 60%;
+    }
+
+    .o-auth-login-large {
+        display: none;
+    }
+
+    .o-auth-login-small {
+        display: flex;
     }
 }
