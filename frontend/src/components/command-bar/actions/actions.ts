@@ -5,9 +5,10 @@ import {
   ReceiptRefundIcon,
   HomeIcon,
 } from "@heroicons/react/24/outline";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const initialActions = [
+  
   // -------------------basic---------------------
   {
     id: "homeAction",
@@ -18,6 +19,16 @@ export const initialActions = [
     perform: () => (window.location.href = "/"),
     //icon: // ClockIcon,
     subtitle: "Subtitles can help add more context.",
+  },
+  {
+    id: "cartAction",
+    name: "Cart",
+    shortcut: ["c", "a"],
+    keywords: "cart order item product",
+    section: "Basic",
+    perform: () => (window.location.href = "/cart"),
+    //icon: // ClockIcon,
+    subtitle: "Your product into your shopping bag.",
   },
 
   // -------------------add-------------------

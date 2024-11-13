@@ -47,6 +47,9 @@ const SignIn = () => {
             setSnackSeverity('error')
             setSnackState({ ...snackState, open: true });
         }
+        else {
+            navigate('/')
+        }
         // else if (!password.match(passwordPattern)) {
         //     setMessage('Incorrect Password!')
         //     setSnackSeverity('error')
@@ -56,6 +59,7 @@ const SignIn = () => {
         // setMessage('Logged In Successfully!')
         // setSnackSeverity('warning')
         // setSnackState({ ...snackState, open: true });
+        
 
         console.log('email', email, 'password', password)
         // try {

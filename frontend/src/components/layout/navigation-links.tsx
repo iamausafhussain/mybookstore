@@ -10,10 +10,30 @@ import {
   TicketIcon,
   HeartIcon,
   GiftIcon,
+  ShoppingBagIcon,
 } from "@heroicons/react/24/outline";
 import React from "react";
 
 export const navigationLinks = [
+  {
+    name: "Orders",
+    subLinks: [
+      {
+        name: "Cart",
+        description: "Items added to your cart.",
+        link: "/cart",
+        color: "bg-teal-300 dark:bg-teal-700",
+        icon: <ShoppingBagIcon />,
+      },
+      {
+        name: "Previous Orders",
+        description: "Order History",
+        link: "/order-history",
+        color: "bg-teal-300 dark:bg-teal-700",
+        icon: <ClockIcon />,
+      },
+    ]
+  },
   {
     name: "Add",
     subLinks: [
@@ -47,84 +67,84 @@ export const navigationLinks = [
       },
     ],
   },
-  {
-    name: "Projects",
-    subLinks: [
-      {
-        name: "Create",
-        description: "Create a new project",
-        link: "/create-project",
-        color: "bg-green-300 dark:bg-green-700",
-        icon: <PlusCircleIcon />,
-      },
-      {
-        name: "Manage",
-        description: "Manage projects",
-        link: "/manage-projects",
-        color: "bg-blue-300 dark:bg-blue-700",
-        icon: <ListBulletIcon />,
-      },
-      {
-        name: "Archive",
-        description: "Manage all archived projects",
-        link: "/archive-projects",
-        color: "bg-red-300 dark:bg-red-700",
-        icon: <ReceiptRefundIcon />,
-      },
-    ],
-  },
-  {
-    name: "Clients",
-    subLinks: [
-      {
-        name: "Create",
-        description: "Create a new client",
-        link: "/create-client",
-        color: "bg-green-300 dark:bg-green-700",
-        icon: <PlusCircleIcon />,
-      },
-      {
-        name: "Manage",
-        description: "Manage clients",
-        link: "/manage-clients",
-        color: "bg-blue-300 dark:bg-blue-700",
-        icon: <ListBulletIcon />,
-      },
-      {
-        name: "Archive",
-        description: "Manage all archived clients",
-        link: "/archive-clients",
-        color: "bg-red-300 dark:bg-red-700",
-        icon: <ReceiptRefundIcon />,
-      },
-    ],
-  },
-  {
-    name: "Employees",
-    subLinks: [
-      {
-        name: "Create",
-        description: "Create a new employee",
-        link: "/create-employee",
-        color: "bg-green-300 dark:bg-green-700",
-        icon: <PlusCircleIcon />,
-      },
-      {
-        name: "Manage",
-        description: "Manage employees",
-        link: "/manage-employees",
-        color: "bg-blue-300 dark:bg-blue-700",
-        icon: <ListBulletIcon />,
-      },
-      {
-        name: "Archive",
-        description: "Manage all archived employees",
-        link: "/archive-employees",
-        color: "bg-red-300 dark:bg-red-700",
-        icon: <ReceiptRefundIcon />,
-      },
-    ],
-  },
+  // {
+  //   name: "Projects",
+  //   subLinks: [
+  //     {
+  //       name: "Create",
+  //       description: "Create a new project",
+  //       link: "/create-project",
+  //       color: "bg-green-300 dark:bg-green-700",
+  //       icon: <PlusCircleIcon />,
+  //     },
+  //     {
+  //       name: "Manage",
+  //       description: "Manage projects",
+  //       link: "/manage-projects",
+  //       color: "bg-blue-300 dark:bg-blue-700",
+  //       icon: <ListBulletIcon />,
+  //     },
+  //     {
+  //       name: "Archive",
+  //       description: "Manage all archived projects",
+  //       link: "/archive-projects",
+  //       color: "bg-red-300 dark:bg-red-700",
+  //       icon: <ReceiptRefundIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Clients",
+  //   subLinks: [
+  //     {
+  //       name: "Create",
+  //       description: "Create a new client",
+  //       link: "/create-client",
+  //       color: "bg-green-300 dark:bg-green-700",
+  //       icon: <PlusCircleIcon />,
+  //     },
+  //     {
+  //       name: "Manage",
+  //       description: "Manage clients",
+  //       link: "/manage-clients",
+  //       color: "bg-blue-300 dark:bg-blue-700",
+  //       icon: <ListBulletIcon />,
+  //     },
+  //     {
+  //       name: "Archive",
+  //       description: "Manage all archived clients",
+  //       link: "/archive-clients",
+  //       color: "bg-red-300 dark:bg-red-700",
+  //       icon: <ReceiptRefundIcon />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Employees",
+  //   subLinks: [
+  //     {
+  //       name: "Create",
+  //       description: "Create a new employee",
+  //       link: "/create-employee",
+  //       color: "bg-green-300 dark:bg-green-700",
+  //       icon: <PlusCircleIcon />,
+  //     },
+  //     {
+  //       name: "Manage",
+  //       description: "Manage employees",
+  //       link: "/manage-employees",
+  //       color: "bg-blue-300 dark:bg-blue-700",
+  //       icon: <ListBulletIcon />,
+  //     },
+  //     {
+  //       name: "Archive",
+  //       description: "Manage all archived employees",
+  //       link: "/archive-employees",
+  //       color: "bg-red-300 dark:bg-red-700",
+  //       icon: <ReceiptRefundIcon />,
+  //     },
+  //   ],
+  // },
   {
     name: "Company",
     subLinks: [
