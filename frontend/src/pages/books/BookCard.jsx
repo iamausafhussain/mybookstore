@@ -4,6 +4,7 @@ import { getImageUrl } from '../../utils/getImageUrl'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
+import { Button } from '@headlessui/react'
 
 
 const BookCard = ({ book }) => {
@@ -36,12 +37,13 @@ const BookCard = ({ book }) => {
                     <p className="font-medium mb-5"> ${`${book.newPrice}`}
                         <span className="line-through font-normal ml-2">${`${book.oldPrice}`}</span>
                     </p>
-                    <button
+                    <Button
                         onClick={() => handleAddToCart(book)}
-                        className="btn-primary px-6 space-x-1 flex items-center gap-1 ">
-                        <FiShoppingCart className="" />
+                        className="rounded bg-[#4D47C3] hover:bg-[#3833a0] py-2 px-4 text-sm text-white flex items-center justify-center gap-1"
+                       >
+                        <FiShoppingCart />
                         <span>Add to Cart</span>
-                    </button>
+                    </Button>
                 </div>
             </div>
 
