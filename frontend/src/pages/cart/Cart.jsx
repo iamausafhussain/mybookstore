@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getImageUrl } from '../../utils/getImageUrl'
 import { clearCart, removeFromCart } from '../../redux/features/cart/cartSlice'
+import { Button } from '@headlessui/react'
 
 const Cart = () => {
 
@@ -27,13 +28,12 @@ const Cart = () => {
                     <div className="flex items-start justify-between">
                         <div className="text-lg font-medium text-gray-900">Shopping cart</div>
                         <div className="ml-3 flex h-7 items-center ">
-                            <button
-                                type="button"
+                            <Button
                                 onClick={handleClearCart}
-                                className="relative -m-2 py-1 px-2 bg-red-500 text-white rounded-md hover:bg-secondary transition-all duration-200 z-0  "
+                                className="rounded bg-indigo-600 hover:bg-indigo-700 py-2 px-4 text-sm text-white flex items-center justify-center gap-1"
                             >
                                 <span className="">Clear Cart</span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
 
