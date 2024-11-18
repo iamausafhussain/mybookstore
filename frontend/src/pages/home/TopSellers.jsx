@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import BookCard from '../books/BookCard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
@@ -9,29 +9,18 @@ import 'swiper/css/navigation'
 import '../../App.css';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import {
-  ArchiveBoxXMarkIcon,
   ChevronDownIcon,
-  PencilIcon,
-  Square2StackIcon,
-  TrashIcon,
 } from '@heroicons/react/16/solid'
+import { useFetchAllBooksQuery } from '../../redux/features/book/bookSlice';
 
 const categories = ["Choose a genre", "Business", "Fiction", "Horror", "Adventure"]
 
 const TopSellers = () => {
 
-  const [books, setBooks] = useState([]);
+  const { data: books = [] } = useFetchAllBooksQuery();
   const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
 
-  useEffect(() => {
-    fetch("books.json")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-  }, [])
-
   const filteredBooks = selectedCategory === "Choose a genre" ? books : books.filter(books => books.category === selectedCategory.toLowerCase())
-
-  // console.log(filteredBooks)
 
   return (
     <div className='py-10'>
@@ -59,7 +48,7 @@ const TopSellers = () => {
               categories.map((category, index) => (
                 <MenuItem key={index}>
                   <a
-                    onClick={(e) => (setSelectedCategory(category))}
+                    onClick={() => (setSelectedCategory(category))}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 data-[focus]:outline-none"
                   >
                     {category}

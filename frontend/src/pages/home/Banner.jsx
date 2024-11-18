@@ -1,6 +1,6 @@
 import { Button } from "@headlessui/react"
 import BannerImg from "../../assets/banner.png"
-import { FiShoppingCart } from "react-icons/fi"
+import { LuBellRing } from "react-icons/lu";
 
 const Banner = () => {
     return (
@@ -17,7 +17,7 @@ const Banner = () => {
                 <Button
                     className="rounded bg-[#4D47C3] hover:bg-[#3833a0] py-2 px-4 text-sm text-white flex items-center justify-center gap-1"
                 >
-                    <FiShoppingCart />
+                    <LuBellRing />
                     <span>Subscribe</span>
                 </Button>
             </div>
