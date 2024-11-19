@@ -8,6 +8,7 @@ import Signup from "../pages/signup/Signup.jsx";
 import Cart from "../pages/cart/Cart.jsx";
 import Checkout from "../pages/checkout/Checkout.jsx";
 import SingleBook from "../pages/books/SingleBook.jsx";
+import PrivateRoute from "./PrivateRoute.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
                 path: "/",
                 element: <Home />
             },
-            { 
+            {
                 path: "/orders",
                 element: <div>Orders Component</div>
             },
@@ -32,7 +33,9 @@ const router = createBrowserRouter([
             },
             {
                 path: "/checkout",
-                element: <Checkout />
+                element: <PrivateRoute>
+                    <Checkout />
+                </PrivateRoute>
             },
             {
                 path: "/books/:id",

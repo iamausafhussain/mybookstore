@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@headlessui/react'
+import { useAuth } from '../../context/AuthContext'
+import { useAddOrderMutation } from '../../redux/features/orders/orderSlice'
 
 
 const Checkout = () => {
+    const { currentUser } = useAuth();
+    const [addOrder, { isLoading, error }] = useAddOrderMutation();
+    const navigate = useNavigate();
+
     const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState('ausaf@gmail.com');
+    const [email, setEmail] = useState(currentUser?.email);
     const [phone, setPhone] = useState('');
     const [street, setStreet] = useState('');
     const [city, setCity] = useState('');
@@ -15,12 +21,11 @@ const Checkout = () => {
     const [zipCode, setZipCode] = useState('');
     const [isChecked, setIsChecked] = useState(false);
 
-    const [currentUser, setCurrentUser] = useState();
 
     const cartItems = useSelector((state) => state.cart.cartItems);
     const totalPrice = cartItems.reduce((acc, item) => acc + item.newPrice, 0).toFixed(2);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const newOrder = {
             name: fullName,
             email: email,
@@ -35,7 +40,12 @@ const Checkout = () => {
             productsIds: cartItems.map(item => item?._id),
             totalPrice: totalPrice
         }
-        console.log(newOrder)
+        try {
+            console.log(newOrder)
+            await addOrder(newOrder).unwrap();
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -71,7 +81,6 @@ const Checkout = () => {
                                                 value={email} onChange={(e) => setEmail(e.target.value)}
                                                 type="text" name="email" id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
                                                 disabled
-                                                defaultValue={currentUser?.email}
                                                 placeholder="email@domain.com" />
                                         </div>
 

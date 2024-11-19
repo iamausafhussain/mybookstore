@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./Login.css"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BookStoreLogoLight from '../../assets/BookStoreLogoLight.png'
 import SalyImage from '../../assets/login/SalyImage.png'
 import SignIn from './SignIn'
+import { useAuth } from '../../context/AuthContext'
 
 const Login = () => {
+
+    const { currentUser } = useAuth();
+    const navigate = useNavigate();
+
+    if (currentUser) {
+        navigate('/')
+    }
 
     return (
         <div className='main-login font-poppins px-10 py-5'>
