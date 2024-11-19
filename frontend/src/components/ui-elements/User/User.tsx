@@ -7,6 +7,7 @@ import {
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from "../../../context/AuthContext";
 
 const User = () => {
   const [theme, setTheme] = useState("Light Theme");
@@ -15,27 +16,29 @@ const User = () => {
 
   const ms = new Date().getUTCMilliseconds();
 
+  const { currentUser, logout } = useAuth();
+
   const items = [
     {
       title: "Admin Dashboard",
       icon: <Squares2X2Icon />,
       color: "bg-indigo-300 dark:bg-indigo-800",
       href: "/dashboard",
-      onclick: () => {navigateTo('/dashboard')},
+      onclick: () => { navigateTo('/dashboard') },
     },
     {
       title: `Cart [${cartItems.length}]`,
       icon: <ShoppingBagIcon />,
       color: "bg-teal-300 dark:bg-teal-800",
       href: "/cart",
-      onclick: () => {navigateTo('/cart')},
+      onclick: () => { navigateTo('/cart') },
     },
     {
       title: "Favourites",
       icon: <HeartIcon />,
       color: "bg-fuchsia-300 dark:bg-fuchsia-800",
       href: "/favourites",
-      onclick: () => {navigateTo('/favourites')},
+      onclick: () => { navigateTo('/favourites') },
     },
     // {
     //   title: theme === "light" ? "Dark theme" : "Light theme",
@@ -56,7 +59,10 @@ const User = () => {
       icon: <ArrowRightStartOnRectangleIcon />,
       color: "bg-red-300 dark:bg-red-800",
       href: "/login",
-      onclick: () => {navigateTo('/login')},
+      onclick: async () => {
+        await logout()
+        navigateTo('/login')
+      },
     },
   ];
 
@@ -67,7 +73,7 @@ const User = () => {
   const onChangeThemeClick = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    
+
     if (newTheme === "dark") {
       document.documentElement.classList.remove("light");
       document.documentElement.classList.add("dark");
@@ -80,11 +86,16 @@ const User = () => {
   return (
     <div className="relative group">
       <div className="flex items-center h-10 gap-3 rounded-lg cursor-pointer w-fit hover:bg-purple-300 dark:hover:bg-slate-800">
+        
         <img
-          src={`https://api.dicebear.com/5.x/bottts-neutral/svg?seed=${ms}`}
+          src={ currentUser?.photoURL != null ? currentUser?.photoURL : `https://api.dicebear.com/5.x/bottts-neutral/svg?seed=${ms}`}
           className="my-auto ml-3 rounded-full w-7 h-7"
         />
-        <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">Ausaf Hussain</p>
+        {currentUser
+          ? <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">{ currentUser?.displayName != null ? currentUser?.displayName : currentUser?.email }</p>
+          : <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">Please Login</p>
+        }
+
       </div>
       <ul className="absolute w-72 p-2 bg-slate-50 dark:bg-gray-900 shadow-[rgba(0,_0,_0,_0.24)_0px_0px_40px] shadow-slate-400 dark:shadow-slate-700 hidden md:group-hover:flex flex-col -left-[8em] rounded-xl ">
         {items.map((item) => (

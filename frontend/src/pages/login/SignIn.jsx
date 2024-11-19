@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Button as HeadlessButton } from '@headlessui/react'
-import { useForm } from "react-hook-form"
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import SignInApple from "../../assets/login/SignInApple.png"
 import SignInFacebook from "../../assets/login/SignInFacebook.png"
 import SignInGoogle from "../../assets/login/SignInGoogle.png"
@@ -12,13 +11,18 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 import "./Login.css";
+import { useAuth } from '../../context/AuthContext'
+import { GoogleAuthProvider } from 'firebase/auth'
 
 const SignIn = () => {
+
+    const { loginUser, signInWithGoogle } = useAuth();
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
     const [message, setMessage] = useState("")
-    const navigate = useNavigate();
 
     // Snackbar state variable declaration
     const [snackSeverity, setSnackSeverity] = useState('info')
@@ -39,41 +43,62 @@ const SignIn = () => {
 
     const onSubmit = async () => {
         const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-        const passwordPattern =
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        // const passwordPattern =
+        //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        if (!email.match(emailPattern)) {
-            setMessage('Incorrect Email!')
+        try {
+            if (!email.match(emailPattern)) {
+                setMessage('Incorrect Email!')
+                setSnackSeverity('error')
+                setSnackState({ ...snackState, open: true });
+            }
+            else {
+
+                await loginUser(email, password)
+                    .then((result) => {
+                        console.log(result)
+                        navigate("/")
+
+                    }).catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        console.log('error code:', errorCode)
+                        console.log('error message:', errorMessage)
+
+                        setMessage('Invalid Creadential!')
+                        setSnackSeverity('error')
+                        setSnackState({ ...snackState, open: true });
+                    });
+            }
+
+        } catch (error) {
+            setMessage(error)
             setSnackSeverity('error')
             setSnackState({ ...snackState, open: true });
         }
-        else {
-            navigate('/')
-        }
-        // else if (!password.match(passwordPattern)) {
-        //     setMessage('Incorrect Password!')
-        //     setSnackSeverity('error')
-        //     setSnackState({ ...snackState, open: true });
-        // }
-        
-        // setMessage('Logged In Successfully!')
-        // setSnackSeverity('warning')
-        // setSnackState({ ...snackState, open: true });
-        
 
-        console.log('email', email, 'password', password)
-        // try {
-        //     await loginUser(data.email, data.password);
-        //     alert("Login successful!");
-        //     navigate("/")
-        // } catch (error) {
-        //     setMessage("Please provide a valid email and password") 
-        //     console.error(error)
-        // }
     }
 
-    const handleGoogleAuth = () => {
-        
+    const handleGoogleAuth = async () => {
+        try {
+            await signInWithGoogle()
+                .then(result => {
+                    const credential = GoogleAuthProvider.credentialFromResult(result)
+                    const token = credential.accessToken
+
+                    const user = result.user
+
+                    console.log('token:', token)
+                    console.log('credential:', credential)
+                    console.log('user:', user)
+                })
+            navigate("/");
+
+        } catch (error) {
+            setMessage(error)
+            setSnackSeverity('error')
+            setSnackState({ ...snackState, open: true });
+        }
     }
 
     return (
@@ -143,7 +168,7 @@ const SignIn = () => {
                         <button onClick={() => { console.log('Sign In with Apple') }} className='pt-4'>
                             <img src={SignInApple} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
-                        <button className='pt-4'>
+                        <button onClick={handleGoogleAuth} className='pt-4'>
                             <img src={SignInGoogle} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
                         <button className='pt-4'>

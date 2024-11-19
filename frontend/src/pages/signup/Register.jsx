@@ -1,13 +1,83 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
+import "../login/Login.css"
+import { useAuth } from '../../context/AuthContext'
 import { Button } from '@headlessui/react'
 import AppleLogo from "../../assets/login/AppleLogo.png"
 import FacebookLogo from "../../assets/login/FacebookLogo.png"
 import GoogleLogo from "../../assets/login/GoogleLogo.png"
-import "../login/Login.css"
+import { useNavigate } from 'react-router-dom'
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import { GoogleAuthProvider } from 'firebase/auth'
 
 const Register = () => {
+    const { registerUser, signInWithGoogle } = useAuth();
+    const navigate = useNavigate();
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+
+    // Snackbar state variables
+    const [message, setMessage] = useState("")
+    const [snackSeverity, setSnackSeverity] = useState('info')
+    const [snackState, setSnackState] = React.useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'center',
+    });
+    const { vertical, horizontal, open } = snackState;
+    
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackState({ ...snackState, open: false });
+    };
+
+    const handleSubmit = async () => {
+        console.log('email', email, 'username', username, 'password', password, 'confirm password', confirmPassword)
+
+        try {
+            await registerUser(email, password);
+            setMessage('Signed Up Successfully!')
+            setSnackSeverity('error')
+            setSnackState({ ...snackState, open: true });
+            navigate('/')
+        } catch (error) {
+            setMessage(error)
+            setSnackSeverity('error')
+            setSnackState({ ...snackState, open: true });
+            console.log("Please provide a valid Input!", error)
+        }
+    }
+
+    const handleGoogleAuth = async () => {
+        try {
+            await signInWithGoogle()
+                .then(result => {
+                    const credential = GoogleAuthProvider.credentialFromResult(result)
+                    const token = credential.accessToken
+
+                    const user = result.user
+
+                    console.log('token:', token)
+                    console.log('credential:', credential)
+                    console.log('user:', user)
+                })
+            navigate("/");
+
+        } catch (error) {
+            setMessage(error)
+            setSnackSeverity('error')
+            setSnackState({ ...snackState, open: true });
+        }
+    }
+
 
     return (
         <div className='login'>
@@ -21,7 +91,9 @@ const Register = () => {
 
                 <div className='pt-5 login-input'>
                     <input
-                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        type="email"
                         id="hs-leading-icon"
                         name="hs-leading-icon"
                         className="input bg-[#F0EFFF] h-14 text-[#A7A3FF] placeholder-[#A7A3FF] py-3 px-4 ps-5 block rounded-md text-poppins font-normal disabled:opacity-50 disabled:pointer-events-none outline-none"
@@ -32,6 +104,8 @@ const Register = () => {
 
                 <div className='pt-5 login-input'>
                     <input
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         type="text"
                         id="hs-leading-icon"
                         name="hs-leading-icon"
@@ -43,7 +117,14 @@ const Register = () => {
                 <div className="login-input pt-5">
                     <div className="relative login-password-input">
 
-                        <input type={`${showPassword ? 'text' : 'password'}`} id="hs-trailing-icon" name="hs-trailing-icon" className="passsword-input h-14 bg-[#F0EFFF] text-[#A7A3FF] placeholder-[#A7A3FF] py-3 px-4 ps-5 block text-poppins font-normal rounded-md disabled:opacity-50 disabled:pointer-events-none outline-none" placeholder="Password" />
+                        <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type={`${showPassword ? 'text' : 'password'}`}
+                            id="hs-trailing-icon"
+                            name="hs-trailing-icon"
+                            className="passsword-input h-14 bg-[#F0EFFF] text-[#A7A3FF] placeholder-[#A7A3FF] py-3 px-4 ps-5 block text-poppins font-normal rounded-md disabled:opacity-50 disabled:pointer-events-none outline-none"
+                            placeholder="Password" />
 
                         <div onClick={() => { setShowPassword(!showPassword) }} className="absolute inset-y-0 end-0 flex items-center z-20 pe-4">
 
@@ -68,7 +149,14 @@ const Register = () => {
                 <div className="login-input pt-5">
                     <div className="relative login-password-input">
 
-                        <input type={`${showConfirmPassword ? 'text' : 'password'}`} id="hs-trailing-icon" name="hs-trailing-icon" className="passsword-input h-14 bg-[#F0EFFF] text-[#A7A3FF] placeholder-[#A7A3FF] py-3 px-4 ps-5 block text-poppins font-normal rounded-md disabled:opacity-50 disabled:pointer-events-none outline-none" placeholder="Confirm Password" />
+                        <input
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            type={`${showConfirmPassword ? 'text' : 'password'}`}
+                            id="hs-trailing-icon"
+                            name="hs-trailing-icon"
+                            className="passsword-input h-14 bg-[#F0EFFF] text-[#A7A3FF] placeholder-[#A7A3FF] py-3 px-4 ps-5 block text-poppins font-normal rounded-md disabled:opacity-50 disabled:pointer-events-none outline-none"
+                            placeholder="Confirm Password" />
 
                         <div onClick={() => { setShowConfirmPassword(!showConfirmPassword) }} className="absolute inset-y-0 end-0 flex items-center z-20 pe-4">
 
@@ -89,7 +177,7 @@ const Register = () => {
                 </div>
 
                 <div className="login-button text-center pt-10">
-                    <Button className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
+                    <Button onClick={handleSubmit} className="w-full h-14 flex justify-center items-center gap-2 rounded-md bg-[#4D47C3] py-1.5 px-3 font-medium text-white shadow-inner shadow-white/10 focus:outline-none hover:bg-[#3833a0] focus:outline-1 focus:outline-white">
                         <p>Register</p>
                     </Button>
                 </div>
@@ -117,18 +205,30 @@ const Register = () => {
 
                     <div className='items-center justify-center pt-5'>
                         <button className=' '>
-                            <img src={AppleLogo} alt="O Auth Login" className='' />
+                            <img src={AppleLogo} alt="O Auth Login"/>
+                        </button>
+                        <button onClick={handleGoogleAuth} className='pl-8 '>
+                            <img src={GoogleLogo} alt="O Auth Login"/>
                         </button>
                         <button className='pl-8 '>
-                            <img src={GoogleLogo} alt="O Auth Login" className='' />
-                        </button>
-                        <button className='pl-8 '>
-                            <img src={FacebookLogo} alt="O Auth Login" className='' />
+                            <img src={FacebookLogo} alt="O Auth Login"/>
                         </button>
                     </div>
 
                 </div>
             </div>
+
+            <Snackbar
+                open={open} autoHideDuration={1500} onClose={handleClose} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
+                <Alert
+                    onClose={handleClose}
+                    severity={snackSeverity}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {message}
+                </Alert>
+            </Snackbar>
 
         </div>
     )

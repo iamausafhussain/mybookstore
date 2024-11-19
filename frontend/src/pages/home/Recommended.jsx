@@ -12,6 +12,8 @@ const Recommended = () => {
 
     const { data: books = [] } = useFetchAllBooksQuery();
 
+    const filteredBooks = books.filter(books => books.trending == true);
+
     return (
         <div className='py-16'>
             <h2 className='text-3xl font-semibold mb-6'>
@@ -43,7 +45,7 @@ const Recommended = () => {
                 modules={[Pagination, Navigation]}
                 className="mySwiper">
                 {
-                    books.length > 0 && books.map((book, index) => (
+                    filteredBooks.length > 0 && filteredBooks.map((book, index) => (
                         <SwiperSlide key={index} className='px-4 py-4 rounded-md'>
                             <BookCard key={index} book={book} />
                         </SwiperSlide>
