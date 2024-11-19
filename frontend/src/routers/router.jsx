@@ -9,6 +9,7 @@ import Cart from "../pages/cart/Cart.jsx";
 import Checkout from "../pages/checkout/Checkout.jsx";
 import SingleBook from "../pages/books/SingleBook.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
+import OrderHistory from "../pages/orders/OrderHistory.jsx";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
             {
                 path: "/orders",
                 element: <div>Orders Component</div>
+            },
+            {
+                path: "/order_history",
+                element: <OrderHistory />
             },
             {
                 path: "/about",

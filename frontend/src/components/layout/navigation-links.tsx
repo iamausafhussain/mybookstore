@@ -28,7 +28,7 @@ export const navigationLinks = [
       {
         name: "Previous Orders",
         description: "Order History",
-        link: "/order-history",
+        link: "/order_history",
         color: "bg-teal-300 dark:bg-teal-700",
         icon: <ClockIcon />,
       },

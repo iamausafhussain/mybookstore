@@ -42,6 +42,7 @@ const Checkout = () => {
         }
         try {
             await addOrder(newOrder).unwrap();
+            navigate('/')
         } catch (error) {
             console.log(error)
         }

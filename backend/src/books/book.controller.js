@@ -66,4 +66,25 @@ const deleteABook = async (req, res) => {
     }
 }
 
-module.exports = { postABook, getAllBooks, getABook, updateABook, deleteABook }
+const getBooksByIds = async (req, res) => {
+    const { productsIds } = req.body;
+    try {
+        if (!productsIds || productsIds.length === 0) {
+            return res.status(400).send("No productsIds provided");
+        }
+
+        const books = await Book.find({ _id: { $in: productsIds } });
+
+        if (!books || books.length === 0) {
+            return res.status(404).send(`Books with the provided productsIds not found!`);
+        }
+
+        res.status(200).send(books);
+
+    } catch (error) {
+        console.error("Error fetching books", error);
+        res.status(418).send({ message: `Failed to fetch books.` });
+    }
+}
+
+module.exports = { postABook, getAllBooks, getABook, updateABook, deleteABook, getBooksByIds }

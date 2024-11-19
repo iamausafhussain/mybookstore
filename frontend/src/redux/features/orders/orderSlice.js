@@ -22,6 +22,10 @@ const ordersApi = createApi({
             query: () => "/getOrders",
             providesTags: ["Orders"]
         }),
+        fetchOrdersByEmail: builder.query({
+            query: (email) => `/getOrder/${email}`,
+            providesTags: (results, error, email) => [{ type: "Orders", email }]
+        }),
         addOrder: builder.mutation({
             query: (newOrder) => ({
                 url: '/createOrder',
@@ -33,5 +37,5 @@ const ordersApi = createApi({
     })
 })
 
-export const { useFetchAllOrdersQuery, useAddOrderMutation } = ordersApi
+export const { useFetchAllOrdersQuery, useAddOrderMutation, useFetchOrdersByEmailQuery } = ordersApi
 export default ordersApi;

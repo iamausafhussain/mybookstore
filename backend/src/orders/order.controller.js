@@ -11,4 +11,22 @@ const createOrder = async (req, res) => {
     }
 }
 
-module.exports = { createOrder }
+const getOrderUsingEmail = async (req, res) => {
+    const { email } = req.params;
+    try {
+        const order = await Order.find({email: email})
+
+        if (!order) {
+            res.status(404).send(`Order with email ${email} not found!`)
+        }
+
+        res.status(200).send(order)
+
+
+    } catch (error) {
+        console.error("Error fetching order", error);
+        res.status(418).send({ message: `Failed to fetch order.` })
+    }
+}
+
+module.exports = { createOrder, getOrderUsingEmail }

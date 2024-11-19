@@ -27,7 +27,7 @@ const getUser = async (req, res) => {
         const user = await User.findOne({email: email})
 
         if (!user) {
-            res.status(404).send(`User with id ${email} not found!`)
+            res.status(404).send(`User with email ${email} not found!`)
         }
 
         res.status(200).send(user)
