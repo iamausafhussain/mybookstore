@@ -41,7 +41,6 @@ const Checkout = () => {
             totalPrice: totalPrice
         }
         try {
-            console.log(newOrder)
             await addOrder(newOrder).unwrap();
         } catch (error) {
             console.log(error)

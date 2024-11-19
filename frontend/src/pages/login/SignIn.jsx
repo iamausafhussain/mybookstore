@@ -59,12 +59,7 @@ const SignIn = () => {
                         console.log(result)
                         navigate("/")
 
-                    }).catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        console.log('error code:', errorCode)
-                        console.log('error message:', errorMessage)
-
+                    }).catch(() => {
                         setMessage('Invalid Creadential!')
                         setSnackSeverity('error')
                         setSnackState({ ...snackState, open: true });

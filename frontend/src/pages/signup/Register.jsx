@@ -8,11 +8,12 @@ import GoogleLogo from "../../assets/login/GoogleLogo.png"
 import { useNavigate } from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import { GoogleAuthProvider } from 'firebase/auth'
+import { useAddUserMutation } from '../../redux/features/users/userSlice'
 
 const Register = () => {
     const { registerUser, signInWithGoogle } = useAuth();
     const navigate = useNavigate();
+    const [addUser, { isLoading, error }] = useAddUserMutation();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -30,7 +31,7 @@ const Register = () => {
         horizontal: 'center',
     });
     const { vertical, horizontal, open } = snackState;
-    
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -43,11 +44,20 @@ const Register = () => {
         console.log('email', email, 'username', username, 'password', password, 'confirm password', confirmPassword)
 
         try {
-            await registerUser(email, password);
-            setMessage('Signed Up Successfully!')
-            setSnackSeverity('error')
-            setSnackState({ ...snackState, open: true });
-            navigate('/')
+            await registerUser(email, password)
+                .then(async (res) => {
+                    var userData = {
+                        displayName: username,
+                        email: res.user.email
+                    }
+                    console.log(userData)
+                    await addUser(userData).unwrap();
+                    navigate('/')
+                }).catch(() => {
+                    setMessage('Invalid Creadential!')
+                    setSnackSeverity('error')
+                    setSnackState({ ...snackState, open: true });
+                });
         } catch (error) {
             setMessage(error)
             setSnackSeverity('error')
@@ -59,17 +69,16 @@ const Register = () => {
     const handleGoogleAuth = async () => {
         try {
             await signInWithGoogle()
-                .then(result => {
-                    const credential = GoogleAuthProvider.credentialFromResult(result)
-                    const token = credential.accessToken
+                .then(async (res) => {
+                    var userData = {
+                        displayName: res.user.displayName,
+                        email: res.user.email
+                    }
+                    console.log(userData)
+                    await addUser(userData).unwrap();
+                    navigate("/");
 
-                    const user = result.user
-
-                    console.log('token:', token)
-                    console.log('credential:', credential)
-                    console.log('user:', user)
                 })
-            navigate("/");
 
         } catch (error) {
             setMessage(error)
@@ -205,13 +214,13 @@ const Register = () => {
 
                     <div className='items-center justify-center pt-5'>
                         <button className=' '>
-                            <img src={AppleLogo} alt="O Auth Login"/>
+                            <img src={AppleLogo} alt="O Auth Login" />
                         </button>
                         <button onClick={handleGoogleAuth} className='pl-8 '>
-                            <img src={GoogleLogo} alt="O Auth Login"/>
+                            <img src={GoogleLogo} alt="O Auth Login" />
                         </button>
                         <button className='pl-8 '>
-                            <img src={FacebookLogo} alt="O Auth Login"/>
+                            <img src={FacebookLogo} alt="O Auth Login" />
                         </button>
                     </div>
 

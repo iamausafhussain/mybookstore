@@ -4,19 +4,25 @@ import {
   ShoppingBagIcon,
   HeartIcon
 } from "@heroicons/react/24/outline";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../../../context/AuthContext";
+import { useFetchUserByEmailQuery } from "../../../redux/features/users/userSlice";
 
 const User = () => {
-  const [theme, setTheme] = useState("Light Theme");
   const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+
+  const { data: user = [], isLoading, isError } = useFetchUserByEmailQuery(currentUser?.email, {
+    skip: !currentUser?.email,
+  });
+  console.log(user)
+
+  const [theme, setTheme] = useState("Light Theme");
   const cartItems = useSelector(state => state.cart.cartItems);
 
   const ms = new Date().getUTCMilliseconds();
-
-  const { currentUser, logout } = useAuth();
 
   const items = [
     {
@@ -86,13 +92,13 @@ const User = () => {
   return (
     <div className="relative group">
       <div className="flex items-center h-10 gap-3 rounded-lg cursor-pointer w-fit hover:bg-purple-300 dark:hover:bg-slate-800">
-        
+
         <img
-          src={ currentUser?.photoURL != null ? currentUser?.photoURL : `https://api.dicebear.com/5.x/bottts-neutral/svg?seed=${ms}`}
+          src={currentUser?.photoURL != null ? currentUser?.photoURL : `https://api.dicebear.com/5.x/bottts-neutral/svg?seed=${ms}`}
           className="my-auto ml-3 rounded-full w-7 h-7"
         />
         {currentUser
-          ? <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">{ currentUser?.displayName != null ? currentUser?.displayName : currentUser?.email }</p>
+          ? <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">{currentUser?.displayName != null ? user?.displayName : user?.displayName}</p>
           : <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">Please Login</p>
         }
 
