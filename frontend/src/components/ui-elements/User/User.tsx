@@ -99,7 +99,7 @@ const User = () => {
         />
         {currentUser
           ? <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">{currentUser?.displayName != null ? user?.displayName : user?.displayName}</p>
-          : <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">Please Login</p>
+          : <p className="mr-3 font-bold text-gray-800 dark:text-gray-200 hidden sm:inline-block">Hi, Bibliophile </p>
         }
 
       </div>

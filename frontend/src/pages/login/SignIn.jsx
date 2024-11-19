@@ -13,11 +13,13 @@ import Alert from '@mui/material/Alert';
 import "./Login.css";
 import { useAuth } from '../../context/AuthContext'
 import { GoogleAuthProvider } from 'firebase/auth'
+import { useSnackbar } from '../../context/SnackbarContext'
 
 const SignIn = () => {
 
     const { loginUser, signInWithGoogle } = useAuth();
     const navigate = useNavigate();
+    const showSnackbar = useSnackbar();
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -96,6 +98,14 @@ const SignIn = () => {
         }
     }
 
+    const handleFacebookAuth = async () => {
+        showSnackbar('This is from facebook!', 'success');
+    }
+
+    const handleAppleAuth = async () => {
+        showSnackbar('This is from Apple', 'warning')
+    }
+
     return (
         <div className='login'>
             <div className='login-wrapper w-20 flex flex-col items-start'>
@@ -160,13 +170,13 @@ const SignIn = () => {
                     {/* Large Devices */}
 
                     <div className='o-auth-login-large flex flex-col items-center justify-center'>
-                        <button onClick={() => { console.log('Sign In with Apple') }} className='pt-4'>
+                        <button onClick={handleAppleAuth} className='pt-4'>
                             <img src={SignInApple} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
                         <button onClick={handleGoogleAuth} className='pt-4'>
                             <img src={SignInGoogle} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
-                        <button className='pt-4'>
+                        <button onClick={handleFacebookAuth} className='pt-4'>
                             <img src={SignInFacebook} alt="O Auth Login" className='w-60 object-cover' />
                         </button>
                     </div>
@@ -175,12 +185,12 @@ const SignIn = () => {
 
                     <div className='o-auth-login-small items-center justify-center pt-5'>
                         <button>
-                            <img src={AppleLogo} alt="O Auth Login" />
+                            <img onClick={handleAppleAuth} src={AppleLogo} alt="O Auth Login" />
                         </button>
                         <button onClick={handleGoogleAuth} className='pl-4'>
                             <img src={GoogleLogo} alt="O Auth Login" />
                         </button>
-                        <button className='pl-4'>
+                        <button onClick={handleFacebookAuth} className='pl-4'>
                             <img src={FacebookLogo} alt="O Auth Login" />
                         </button>
                     </div>
