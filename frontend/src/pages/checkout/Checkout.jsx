@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { useAddOrderMutation } from '../../redux/features/orders/orderSlice'
 import { useSnackbar } from '../../context/SnackbarContext'
 import { clearCart } from '../../redux/features/cart/cartSlice'
+import { loadStripe } from '@stripe/stripe-js';
 
 
 const Checkout = () => {
@@ -14,6 +15,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const showSnackbar = useSnackbar();
     const dispatch = useDispatch();
+
 
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState(currentUser?.email);
@@ -30,6 +32,19 @@ const Checkout = () => {
     const totalPrice = cartItems.reduce((acc, item) => acc + item.newPrice, 0).toFixed(2);
 
     const handleSubmit = async () => {
+        const stripe = await loadStripe("pk_test_51QKsYhSFcvNtMUOMN3euS4bvZ9gsLHv0j0T7cwrfF3kNa1g8lB1eck72F3LEq8EL0WhCboWLPxhVofbNyXPqsDNL009wRkGYFZ");
+        const bookItems = cartItems.map(book => ({
+            "title": book.title,
+            "newPrice": book.newPrice,
+            "qnty": 1
+        }));
+
+        console.log('bookItems: ', bookItems)
+
+        const body = JSON.stringify({products: bookItems})
+        console.log('body', body)
+        const headers = { "Content-Type": "application/json" }
+
         const newOrder = {
             name: fullName,
             email: email,
@@ -45,10 +60,28 @@ const Checkout = () => {
             totalPrice: totalPrice
         }
         try {
-            await addOrder(newOrder).unwrap();
-            showSnackbar('Order placed successfully!', 'success')
-            dispatch(clearCart())
-            navigate('/')
+            const response = await fetch("http://localhost:3000/api/create-checkout-session", {
+                method: "POST",
+                headers: headers,
+                body: body
+            });
+
+            const session = await response.json();
+
+            const result = stripe.redirectToCheckout({
+                sessionId: session.id
+            });
+
+            console.log(result)
+
+            if (result.error) {
+                console.log(result.error);
+            }
+
+            // await addOrder(newOrder).unwrap();
+            // // showSnackbar('Order placed successfully!', 'success')
+            // dispatch(clearCart())
+            // navigate('/')
         } catch (error) {
             console.log(error)
             showSnackbar(`Error ${error}`, 'error')
@@ -172,7 +205,7 @@ const Checkout = () => {
                                                     onClick={() => handleSubmit()}
                                                     disabled={isChecked == false || cartItems.length == 0}
                                                     className="rounded bg-[#4D47C3] hover:bg-[#3833a0] py-2 px-4 text-sm text-white">
-                                                    Place an Order
+                                                    Proceed to Payment
                                                 </Button>
 
                                             </div>
