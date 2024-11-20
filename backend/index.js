@@ -8,6 +8,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const bookRoutes = require("./src/books/book.route")
 const orderRoutes = require("./src/orders/order.route")
 const userRoutes = require("./src/users/user.route")
+const stripeRoutes = require("./src/stripe/stripe.route")
 
 const app = express();
 const port = 3000
@@ -22,41 +23,43 @@ app.use(cors({
 app.use("/api/books", bookRoutes)
 app.use("/api/orders", orderRoutes)
 app.use("/api/users", userRoutes)
+app.use("/api/stripe", stripeRoutes)
 
-// stripe payment checkout api
-app.post("/api/create-checkout-session", async (req, res) => {
-  const { products } = req.body;
-
+app.get('/api/retrieve-session/:sessionId', async (req, res) => {
   try {
-    const lineItems = products.map((product) => ({
-      price_data: {
-        currency: "inr",
-        product_data: {
-          name: product.title,
-        },
-        unit_amount: Math.round(product.newPrice * 100),
-      },
-      quantity: 1 // currently we allow only one quantity per item
-    }));
+    const sessionId = req.params.sessionId;
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      billing_address_collection: 'required',
-      shipping_address_collection: {
-        allowed_countries: ['US', 'IN'],
-      },
-      success_url: `${process.env.FRONTEND_URL}/order_history`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment_failed`,
-    });
-
-    res.status(200).json({ id: session.id });
+    res.status(200).json(session);
   } catch (error) {
-    console.error('Error creating checkout session:', error);
-    res.status(500).json({ error: 'Failed to create checkout session' });
+    console.error('Error retrieving session:', error);
+    res.status(500).send('Internal Server Error');
   }
-})
+});
+
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const endpointSecret = 'whsec_your_webhook_secret';
+  const sig = req.headers['stripe-signature'];
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error(`Webhook signature verification failed: ${err.message}`);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
+
+  // Handle the checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+
+    // Process the session data (e.g., save order to the database)
+    console.log('Payment successful:', session);
+  }
+
+  res.status(200).send('Received webhook');
+});
 
 
 async function main() {

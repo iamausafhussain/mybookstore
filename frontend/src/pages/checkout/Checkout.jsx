@@ -34,15 +34,14 @@ const Checkout = () => {
     const handleSubmit = async () => {
         const stripe = await loadStripe("pk_test_51QKsYhSFcvNtMUOMN3euS4bvZ9gsLHv0j0T7cwrfF3kNa1g8lB1eck72F3LEq8EL0WhCboWLPxhVofbNyXPqsDNL009wRkGYFZ");
         const bookItems = cartItems.map(book => ({
+            "_id": book._id,
+            "description": book.description,
             "title": book.title,
             "newPrice": book.newPrice,
             "qnty": 1
         }));
 
-        console.log('bookItems: ', bookItems)
-
         const body = JSON.stringify({products: bookItems})
-        console.log('body', body)
         const headers = { "Content-Type": "application/json" }
 
         const newOrder = {
@@ -60,7 +59,7 @@ const Checkout = () => {
             totalPrice: totalPrice
         }
         try {
-            const response = await fetch("http://localhost:3000/api/create-checkout-session", {
+            const response = await fetch("http://localhost:3000/api/stripe/create-checkout-session", {
                 method: "POST",
                 headers: headers,
                 body: body
