@@ -50,28 +50,24 @@ const SignIn = () => {
 
         try {
             if (!email.match(emailPattern)) {
-                setMessage('Incorrect Email!')
-                setSnackSeverity('error')
-                setSnackState({ ...snackState, open: true });
+                 showSnackbar(`Invalid Email!`, 'error');
             }
             else {
 
                 await loginUser(email, password)
                     .then((result) => {
                         console.log(result)
+                        showSnackbar(`Welcome ${result.user.email}`, 'success')
                         navigate("/")
 
                     }).catch(() => {
-                        setMessage('Invalid Creadential!')
-                        setSnackSeverity('error')
-                        setSnackState({ ...snackState, open: true });
+                        showSnackbar(`Invalid creadential!`, 'warning')
+                        
                     });
             }
 
         } catch (error) {
-            setMessage(error)
-            setSnackSeverity('error')
-            setSnackState({ ...snackState, open: true });
+            showSnackbar(`Error: ${error}`, 'error')
         }
 
     }
@@ -88,13 +84,15 @@ const SignIn = () => {
                     console.log('token:', token)
                     console.log('credential:', credential)
                     console.log('user:', user)
+                    
+                    showSnackbar(`Welcome ${user.displayName}`, 'error');
+                    navigate("/");
+                    
                 })
-            navigate("/");
+
 
         } catch (error) {
-            setMessage(error)
-            setSnackSeverity('error')
-            setSnackState({ ...snackState, open: true });
+            showSnackbar(`Error Occured using Google Auth: ${error}`, 'error');
         }
     }
 
@@ -197,18 +195,6 @@ const SignIn = () => {
 
                 </div>
             </div>
-
-            <Snackbar
-                open={open} autoHideDuration={1500} onClose={handleClose} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
-                <Alert
-                    onClose={handleClose}
-                    severity={snackSeverity}
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    {message}
-                </Alert>
-            </Snackbar>
 
         </div>
     )

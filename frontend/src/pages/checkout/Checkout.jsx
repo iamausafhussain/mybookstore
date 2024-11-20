@@ -1,15 +1,19 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '@headlessui/react'
 import { useAuth } from '../../context/AuthContext'
 import { useAddOrderMutation } from '../../redux/features/orders/orderSlice'
+import { useSnackbar } from '../../context/SnackbarContext'
+import { clearCart } from '../../redux/features/cart/cartSlice'
 
 
 const Checkout = () => {
     const { currentUser } = useAuth();
     const [addOrder, { isLoading, error }] = useAddOrderMutation();
     const navigate = useNavigate();
+    const showSnackbar = useSnackbar();
+    const dispatch = useDispatch();
 
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState(currentUser?.email);
@@ -42,9 +46,12 @@ const Checkout = () => {
         }
         try {
             await addOrder(newOrder).unwrap();
+            showSnackbar('Order placed successfully!', 'success')
+            dispatch(clearCart())
             navigate('/')
         } catch (error) {
             console.log(error)
+            showSnackbar(`Error ${error}`, 'error')
         }
     }
 

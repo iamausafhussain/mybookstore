@@ -9,10 +9,12 @@ import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from "../../../context/AuthContext";
 import { useFetchUserByEmailQuery } from "../../../redux/features/users/userSlice";
+import { useSnackbar } from "../../../context/SnackbarContext";
 
 const User = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
+  const showSnackbar = useSnackbar();
 
   const { data: user = [], isLoading, isError } = useFetchUserByEmailQuery(currentUser?.email, {
     skip: !currentUser?.email,
@@ -68,6 +70,7 @@ const User = () => {
       onclick: async () => {
         await logout()
         navigateTo('/login')
+        showSnackbar('Logged out Successfully!', 'success')
       },
     },
   ];

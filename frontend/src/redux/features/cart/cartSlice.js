@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { useSnackbar } from '../../../context/SnackbarContext'
 
 const initialState = {
-  cartItems: [],
+    cartItems: [],
 }
 
 const cartSlice = createSlice({

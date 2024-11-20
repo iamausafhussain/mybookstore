@@ -5,15 +5,18 @@ import { FiShoppingCart } from 'react-icons/fi';
 import { Button } from '@headlessui/react';
 import { addToCart } from '../../redux/features/cart/cartSlice';
 import { useDispatch } from 'react-redux';
+import { useSnackbar } from '../../context/SnackbarContext'
 
 const SingleBook = () => {
 
     const { id } = useParams();
     const { data: book = [], isLoading, isError } = useFetchBookByIdQuery(id);
     const dispatch = useDispatch();
+    const showSnackbar = useSnackbar();
 
     const handleAddToCart = (product) => {
         dispatch(addToCart(product))
+        showSnackbar('Item added to cart.', 'success')
     }
 
     if (isLoading) return <div>Loading...</div>

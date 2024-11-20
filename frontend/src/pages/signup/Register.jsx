@@ -9,11 +9,13 @@ import { useNavigate } from 'react-router-dom'
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useAddUserMutation } from '../../redux/features/users/userSlice'
+import { useSnackbar } from '../../context/SnackbarContext'
 
 const Register = () => {
     const { registerUser, signInWithGoogle } = useAuth();
     const navigate = useNavigate();
     const [addUser, { isLoading, error }] = useAddUserMutation();
+    const showSnackbar = useSnackbar();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -22,26 +24,7 @@ const Register = () => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
-    // Snackbar state variables
-    const [message, setMessage] = useState("")
-    const [snackSeverity, setSnackSeverity] = useState('info')
-    const [snackState, setSnackState] = React.useState({
-        open: false,
-        vertical: 'top',
-        horizontal: 'center',
-    });
-    const { vertical, horizontal, open } = snackState;
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setSnackState({ ...snackState, open: false });
-    };
-
     const handleSubmit = async () => {
-        console.log('email', email, 'username', username, 'password', password, 'confirm password', confirmPassword)
 
         try {
             await registerUser(email, password)
@@ -50,19 +33,14 @@ const Register = () => {
                         displayName: username,
                         email: res.user.email
                     }
-                    console.log(userData)
+                    showSnackbar(`Welcome ${username}`, 'error')
                     await addUser(userData).unwrap();
                     navigate('/')
                 }).catch(() => {
-                    setMessage('Invalid Creadential!')
-                    setSnackSeverity('error')
-                    setSnackState({ ...snackState, open: true });
+                    showSnackbar('Invalid Credentials!', 'error')
                 });
         } catch (error) {
-            setMessage(error)
-            setSnackSeverity('error')
-            setSnackState({ ...snackState, open: true });
-            console.log("Please provide a valid Input!", error)
+            showSnackbar(`Error ${error}`, 'error')
         }
     }
 
@@ -74,16 +52,14 @@ const Register = () => {
                         displayName: res.user.displayName,
                         email: res.user.email
                     }
-                    console.log(userData)
+                    showSnackbar(`Signed Up Successfully: ${userData.displayName}`, 'success')
                     await addUser(userData).unwrap();
                     navigate("/");
 
                 })
 
         } catch (error) {
-            setMessage(error)
-            setSnackSeverity('error')
-            setSnackState({ ...snackState, open: true });
+            showSnackbar(`Error: ${error}`, 'error')
         }
     }
 
@@ -226,18 +202,6 @@ const Register = () => {
 
                 </div>
             </div>
-
-            <Snackbar
-                open={open} autoHideDuration={1500} onClose={handleClose} anchorOrigin={{ vertical, horizontal }} key={vertical + horizontal}>
-                <Alert
-                    onClose={handleClose}
-                    severity={snackSeverity}
-                    variant="filled"
-                    sx={{ width: '100%' }}
-                >
-                    {message}
-                </Alert>
-            </Snackbar>
 
         </div>
     )

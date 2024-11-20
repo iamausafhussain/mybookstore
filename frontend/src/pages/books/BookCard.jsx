@@ -5,13 +5,16 @@ import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 import { Button } from '@headlessui/react'
+import { useSnackbar } from '../../context/SnackbarContext'
 
 
 const BookCard = ({ book }) => {
     const dispatch = useDispatch();
+    const showSnackbar = useSnackbar();
 
     const handleAddToCart = (product) => {
         dispatch(addToCart(product))
+        showSnackbar('Book added to Cart', 'success')
     }
 
     return (
