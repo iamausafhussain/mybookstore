@@ -23,13 +23,13 @@ const createOrder = async (req, res) => {
 const getOrderUsingEmail = async (req, res) => {
     const { email } = req.params;
     try {
-        const order = await Order.find({email: email})
+        const order = await Order.find({'customer_details.email': email})
 
         if (!order) {
             res.status(404).send(`Order with email ${email} not found!`)
         }
 
-        res.status(200).send(order)
+        res.status(200).send({order: order})
 
 
     } catch (error) {
