@@ -7,11 +7,13 @@ import { useAddOrderMutation } from '../../redux/features/orders/orderSlice'
 import { useSnackbar } from '../../context/SnackbarContext'
 import { clearCart } from '../../redux/features/cart/cartSlice'
 import { loadStripe } from '@stripe/stripe-js';
+import { useCreateCheckoutSessionMutation } from '../../redux/features/stripe/stripeSlice'
 
 
 const Checkout = () => {
     const { currentUser } = useAuth();
     const [addOrder, { isLoading, error }] = useAddOrderMutation();
+    const [createCheckoutSession] = useCreateCheckoutSessionMutation();
     const navigate = useNavigate();
     const showSnackbar = useSnackbar();
     const dispatch = useDispatch();
@@ -41,7 +43,7 @@ const Checkout = () => {
             "qnty": 1
         }));
 
-        const body = JSON.stringify({products: bookItems})
+        const body = JSON.stringify({ products: bookItems, customer_email: currentUser.email })
         const headers = { "Content-Type": "application/json" }
 
         const newOrder = {
@@ -59,23 +61,28 @@ const Checkout = () => {
             totalPrice: totalPrice
         }
         try {
-            const response = await fetch("http://localhost:3000/api/stripe/create-checkout-session", {
-                method: "POST",
-                headers: headers,
-                body: body
+            // const response = await fetch("http://localhost:3000/api/stripe/create-checkout-session", {
+            //     method: "POST",
+            //     headers: headers,
+            //     body: body
+            // });
+
+            await createCheckoutSession(body).unwrap().then((res) => {
+                console.log('stripe response: ', res.id)
+                localStorage.setItem('stripe response', res.id)
+                const session = res.id;
+
+                const result = stripe.redirectToCheckout({
+                    sessionId: session
+                });
+
+                console.log(result)
+
+                if (result.error) {
+                    console.log(result.error);
+                }
+
             });
-
-            const session = await response.json();
-
-            const result = stripe.redirectToCheckout({
-                sessionId: session.id
-            });
-
-            console.log(result)
-
-            if (result.error) {
-                console.log(result.error);
-            }
 
             // await addOrder(newOrder).unwrap();
             // // showSnackbar('Order placed successfully!', 'success')

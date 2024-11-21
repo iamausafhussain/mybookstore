@@ -10,6 +10,7 @@ import Checkout from "../pages/checkout/Checkout.jsx";
 import SingleBook from "../pages/books/SingleBook.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import OrderHistory from "../pages/orders/OrderHistory.jsx";
+import OrderHistoryReceipt from "../pages/orders/OrderHistoryReceipt.jsx";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
             {
                 path: "/orders",
                 element: <div>Orders Component</div>
+            },
+            {
+                path: "/order_history/:session_id",
+                element: <OrderHistoryReceipt />
             },
             {
                 path: "/order_history",

@@ -25,43 +25,6 @@ app.use("/api/orders", orderRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/stripe", stripeRoutes)
 
-app.get('/api/retrieve-session/:sessionId', async (req, res) => {
-  try {
-    const sessionId = req.params.sessionId;
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-
-    res.status(200).json(session);
-  } catch (error) {
-    console.error('Error retrieving session:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  const endpointSecret = 'whsec_your_webhook_secret';
-  const sig = req.headers['stripe-signature'];
-
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (err) {
-    console.error(`Webhook signature verification failed: ${err.message}`);
-    res.status(400).send(`Webhook Error: ${err.message}`);
-    return;
-  }
-
-  // Handle the checkout.session.completed event
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-
-    // Process the session data (e.g., save order to the database)
-    console.log('Payment successful:', session);
-  }
-
-  res.status(200).send('Received webhook');
-});
-
-
 async function main() {
   await mongoose.connect(process.env.DB_URL);
 
