@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useFetchSessionDetailsQuery } from '../../redux/features/stripe/stripeSlice';
 import { useAddOrderMutation } from '../../redux/features/orders/orderSlice';
@@ -10,15 +10,32 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { useFetchBooksByProductIdMutation } from '../../redux/features/book/bookSlice';
 
 const OrderHistoryReceipt = () => {
     const { session_id } = useParams();
-
+    const [productsIds, setProductsIds] = useState([]);
+    const [requestBody, setRequestBody] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [addOrder] = useAddOrderMutation();
     const { data: orderDetails, isLoading, isError } = useFetchSessionDetailsQuery(session_id, {
         skip: !session_id,
     });
+    const [fetchBooksByProductId, { data: productsByEmail = [], isLoading: isProductsLoading, isError: isProductsError }] =
+        useFetchBooksByProductIdMutation();
 
-    const [addOrder] = useAddOrderMutation();
+    useEffect(() => {
+        if (orderDetails?.metadata?.product_ids) {
+            try {
+                const parsedIds = JSON.parse(orderDetails.metadata.product_ids);
+                setProductsIds(parsedIds);
+                setRequestBody({ productsIds: parsedIds });
+            } catch (error) {
+                console.error("Failed to parse product IDs:", error);
+                setProductsIds([]);
+            }
+        }
+    }, [orderDetails]);
 
     useEffect(() => {
         if (orderDetails && !isLoading && !isError) {
@@ -60,44 +77,59 @@ const OrderHistoryReceipt = () => {
                     console.error('Failed to add order: ', err);
                 });
         }
-    }, [orderDetails, isLoading, isError, addOrder]);
 
-    if (isLoading) {
+        if (requestBody && productsIds.length > 0) {
+            fetchBooksByProductId(requestBody)
+                .unwrap()
+                .then((res) => {
+                    setProducts(res)
+                })
+                .catch((err) => {
+                    console.error("Failed to fetch books:", err);
+                });
+        }
+    }, [orderDetails, isLoading, isError, addOrder, requestBody, productsIds, fetchBooksByProductId]);
+
+    if (isLoading || isProductsLoading) {
         return <div>Loading...</div>;
     }
 
-    if (isError) {
-        return <div>Error fetching order details.</div>;
+    if (isError || isProductsError) {
+        return <div>Error occurred while fetching data.</div>;
     }
 
     if (!orderDetails) {
         return <div>No order details found.</div>;
     }
 
-    const TAX_RATE = 0.07;
+    const TAX_RATE = 0.18;
 
     function ccyFormat(num) {
         return `${num.toFixed(2)}`;
     }
 
-    function priceRow(qty, unit) {
-        return qty * unit;
+    function priceRow(unit) {
+        return unit;
     }
 
-    function createRow(desc, qty, unit) {
-        const price = priceRow(qty, unit);
-        return { desc, qty, unit, price };
+    function createRow(desc, unit) {
+        const price = priceRow(unit);
+        return { desc, unit, price };
     }
 
-    const rows = [
-        createRow('Paperclips (Box)', 100, 1.15),
-        createRow('Paper (Case)', 10, 45.99),
-        createRow('Waste Basket', 2, 17.99),
-    ];
+    // const rows = [
+    //     createRow('Paperclips (Box)', 1.15),
+    //     createRow('Paper (Case)', 45.99),
+    //     createRow('Waste Basket', 17.99),
+    // ];
 
-    const invoiceSubtotal = rows.reduce((sum, row) => sum + row.price, 0);
-    const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-    const invoiceTotal = invoiceSubtotal + invoiceTaxes;
+    console.log(orderDetails)
+
+    products.map((item) => {
+        createRow(item.title, item.newPrice)
+    })
+
+    const invoiceSubtotal = products.reduce((sum, row) => sum + row.newPrice, 0);
 
     return (
         <>
@@ -122,7 +154,7 @@ const OrderHistoryReceipt = () => {
                         <div className="flex items-center mt-4 sm:mt-0">
                             <h4 className="text-sm sm:text-base">Order No:</h4>
                             <h2 className="font-semibold ml-2 text-sm sm:text-lg">
-                                {orderDetails.created}
+                                #{orderDetails.created}
                             </h2>
                         </div>
                     </div>
@@ -144,42 +176,57 @@ const OrderHistoryReceipt = () => {
                         {/* Order Details Table */}
                         <div className="mt-2">
                             <TableContainer>
-                                <Table sx={{ minWidth: 700 }} aria-label="Order Details">
+                                <Table
+                                    sx={{
+                                        '@media (max-width:600px)': {
+                                            minWidth: '100%',
+                                        },
+                                    }}
+                                    aria-label="Order Details"
+                                >
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Description</TableCell>
-                                            <TableCell align="right">Quantity</TableCell>
-                                            <TableCell align="right">Unit Price</TableCell>
-                                            <TableCell align="right">Total</TableCell>
+                                            <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                                Description
+                                            </TableCell>
+                                            <TableCell
+                                                align="right"
+                                                sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                                            >
+                                                Unit Price
+                                            </TableCell>
+                                            <TableCell
+                                                align="right"
+                                                sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}
+                                            >
+                                                Total
+                                            </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow key={row.desc}>
-                                                <TableCell>{row.desc}</TableCell>
-                                                <TableCell align="right">{row.qty}</TableCell>
-                                                <TableCell align="right">{ccyFormat(row.unit)}</TableCell>
-                                                <TableCell align="right">{ccyFormat(row.price)}</TableCell>
+                                        {products.map((item, id) => (
+                                            <TableRow key={id}>
+                                                <TableCell sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>{item.title} x 1</TableCell>
+                                                <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                                    {item.newPrice}
+                                                </TableCell>
+                                                <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                                    {ccyFormat(item.newPrice)}
+                                                </TableCell>
                                             </TableRow>
                                         ))}
+
                                         <TableRow>
-                                            <TableCell rowSpan={3} />
-                                            <TableCell colSpan={2}>Subtotal</TableCell>
-                                            <TableCell align="right">
+                                            <TableCell rowSpan={2} />
+                                            <TableCell colSpan={1} sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                                Total ({orderDetails.payment_status})
+                                                {/* <Chip variant="gradient" value="chip gradient" className="rounded-full" /> */}
+                                            </TableCell>
+                                            <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                                                 {ccyFormat(invoiceSubtotal)}
                                             </TableCell>
                                         </TableRow>
-                                        <TableRow>
-                                            <TableCell>Tax</TableCell>
-                                            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(0)}%`}</TableCell>
-                                            <TableCell align="right">
-                                                {ccyFormat(invoiceTaxes)}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell colSpan={2}>Total</TableCell>
-                                            <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
-                                        </TableRow>
+
                                     </TableBody>
                                 </Table>
                             </TableContainer>
@@ -188,12 +235,14 @@ const OrderHistoryReceipt = () => {
                         <div className="flex flex-col sm:flex-row mt-6 justify-between gap-5">
                             <div className='bg-[#f5f5f5] p-4 rounded-md flex-1'>
                                 <h1 className='font-medium'>Shipping Address:</h1>
-                                <p className='font-normal text-sm'>No - 10 A, Street Name, Area Name, City Name, State name, country</p>
+                                <p className='font-normal text-sm'>
+                                    {orderDetails.shipping_details.name}, {orderDetails.shipping_details.address.line1}, {orderDetails.shipping_details.address.line2}, {orderDetails.shipping_details.address.city}, {orderDetails.shipping_details.address.state}, {orderDetails.shipping_details.address.country}, {orderDetails.shipping_details.address.postal_code}, {orderDetails.customer_details.phone}
+                                </p>
                             </div>
 
                             <div className='bg-[#f5f5f5] p-4 rounded-md flex-1'>
                                 <h1 className='font-medium'>Billing Address:</h1>
-                                <p className='font-normal text-sm'>No - 10 A, Street Name, Area Name, City Name, State name, country</p>
+                                <p className='font-normal text-sm'> {orderDetails.customer_details.name}, {orderDetails.customer_details.address.line1}, {orderDetails.customer_details.address.line2}, {orderDetails.customer_details.address.city}, {orderDetails.customer_details.address.state}, {orderDetails.customer_details.address.country}, {orderDetails.customer_details.address.postal_code}</p>
                             </div>
                         </div>
                     </div>

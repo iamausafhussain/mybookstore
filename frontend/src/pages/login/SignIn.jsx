@@ -61,7 +61,7 @@ const SignIn = () => {
                         navigate("/")
 
                     }).catch(() => {
-                        showSnackbar(`Invalid creadential!`, 'warning')
+                        showSnackbar(`Invalid credential`, 'warning')
                         
                     });
             }

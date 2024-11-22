@@ -31,13 +31,14 @@ const Register = () => {
                 .then(async (res) => {
                     var userData = {
                         displayName: username,
-                        email: res.user.email
+                        email: res.user.email,
+                        photoURL: null
                     }
-                    showSnackbar(`Welcome ${username}`, 'error')
+                    showSnackbar(`Welcome ${username}`, 'success')
                     await addUser(userData).unwrap();
                     navigate('/')
                 }).catch(() => {
-                    showSnackbar('Invalid Credentials!', 'error')
+                    showSnackbar('Invalid Credentials or User exists with this Email', 'error')
                 });
         } catch (error) {
             showSnackbar(`Error ${error}`, 'error')
@@ -50,7 +51,8 @@ const Register = () => {
                 .then(async (res) => {
                     var userData = {
                         displayName: res.user.displayName,
-                        email: res.user.email
+                        email: res.user.email,
+                        photoURL: res.user.photoURL
                     }
                     showSnackbar(`Signed Up Successfully: ${userData.displayName}`, 'success')
                     await addUser(userData).unwrap();

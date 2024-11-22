@@ -11,7 +11,6 @@ const createOrder = async (req, res) => {
             res.status(201).send({ message: "Order created successfully", order: newOrder })
         }
         else {
-            console.log("Order already present")
             return res.status(409).send({ message: "Order already present" });
         }
     } catch (error) {

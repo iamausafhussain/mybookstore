@@ -13,17 +13,15 @@ import { useSnackbar } from "../../../context/SnackbarContext";
 
 const User = () => {
   const navigate = useNavigate();
-  const { currentUser, logout } = useAuth();
   const showSnackbar = useSnackbar();
+  const { currentUser, logout } = useAuth();
 
   const { data: user = [], isLoading, isError } = useFetchUserByEmailQuery(currentUser?.email, {
     skip: !currentUser?.email,
   });
-  console.log(user)
 
   const [theme, setTheme] = useState("Light Theme");
   const cartItems = useSelector(state => state.cart.cartItems);
-
   const ms = new Date().getUTCMilliseconds();
 
   const items = [

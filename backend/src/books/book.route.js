@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/createBook", postABook)
 router.get("/getBooks", getAllBooks)
 router.get("/getBooks/:id", getABook)
-router.get("/getBooksByIds", getBooksByIds)
+router.post("/getBooksByIds", getBooksByIds)
 router.put("/updateBook/:id", updateABook)
 router.delete("/deleteBook/:id", deleteABook)
 

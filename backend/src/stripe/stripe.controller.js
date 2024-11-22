@@ -4,6 +4,8 @@ const createCheckSession = async (req, res) => {
   const { products } = req.body;
   console.log(req.body.customer_email)
   try {
+    const taxRate = 0.18;
+    
     const lineItems = products.map((product) => ({
       price_data: {
         currency: "inr",
@@ -19,6 +21,8 @@ const createCheckSession = async (req, res) => {
     const metadata = {
       product_ids: JSON.stringify(products.map((product) => product._id))
     };
+
+
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],

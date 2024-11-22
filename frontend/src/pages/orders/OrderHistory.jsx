@@ -7,6 +7,11 @@ const OrderHistory = () => {
     skip: !currentUser?.email,
   });
 
+  // const { data: ordersByEmail, isLoading: isOrdersLoading, isError: isOrdersError } = useFetchOrdersByEmailQuery(
+  //     orderDetails?.customer_email,
+  //     { skip: !orderDetails?.customer_email }
+  // );
+
   console.log('order-history: ', prevOrders)
 
   return (
