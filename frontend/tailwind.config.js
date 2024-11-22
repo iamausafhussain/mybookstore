@@ -14,16 +14,16 @@ export default {
         'Favorite': '#FF5841'
       },
       fontFamily: {
-        'primary' : ["Montserrat", "sans-serif"],
-        'secondary': ["Nunito Sans", "sans-serif"],
-        'poppins': ["Poppins", "sans-serif"]
+        'primary' : ["Inter"],
+        'secondary': ["Inter"],
+        'poppins': ["Inter"]
       }
     },
     screens: {
       'sm': '600px',
       // => @media (min-width: 640px) { ... }
 
-      'md': '800px',
+      'md': '768px',
       // => @media (min-width: 768px) { ... }
 
       'lg': '1024px',

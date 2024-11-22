@@ -31,7 +31,10 @@ const createCheckSession = async (req, res) => {
       },
       success_url: `${process.env.FRONTEND_URL}/order_history/{CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/payment_failed`,
-      metadata
+      metadata,
+      phone_number_collection: {
+        enabled: true,
+      },
     });
 
     res.status(200).json({ id: session.id });

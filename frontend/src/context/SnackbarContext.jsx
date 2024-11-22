@@ -1,14 +1,26 @@
 import React, { createContext, useContext } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { SnackbarProvider as NotistackProvider, useSnackbar as useNotistackSnackbar } from 'notistack';
 
 // Create context for custom hook (optional, just for consistency)
 const SnackbarContext = createContext();
 
+const customTheme = createTheme({
+  typography: {
+    fontFamily: '"Inter", sans-serif',
+    body1: {
+      fontFamily: '"Inter", sans-serif',
+    },
+  },
+});
+
 export const CustomSnackbarProvider = ({ children }) => {
   return (
-    <NotistackProvider maxSnack={3}> {/* maxSnack controls the number of Snackbars shown at once */}
-      {children}
-    </NotistackProvider>
+    <ThemeProvider theme={customTheme}>
+      <NotistackProvider maxSnack={3}> {/* maxSnack controls the number of Snackbars shown at once */}
+        {children}
+      </NotistackProvider>
+    </ThemeProvider>
   );
 };
 

@@ -25,10 +25,7 @@ const router = createBrowserRouter([
                 path: "/orders",
                 element: <div>Orders Component</div>
             },
-            {
-                path: "/order_history/:session_id",
-                element: <OrderHistoryReceipt />
-            },
+
             {
                 path: "/order_history",
                 element: <OrderHistory />
@@ -53,6 +50,10 @@ const router = createBrowserRouter([
             }
 
         ]
+    },
+    {
+        path: "/order_history/:session_id",
+        element: <OrderHistoryReceipt />
     },
     {
         path: "/login",
