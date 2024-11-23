@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useFetchSessionDetailsQuery } from '../../redux/features/stripe/stripeSlice';
 import { useAddOrderMutation } from '../../redux/features/orders/orderSlice';
 import { Navbar } from '../../components/layout';
@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useFetchBooksByProductIdMutation } from '../../redux/features/book/bookSlice';
+import { Chip } from "@material-tailwind/react";
 
 const OrderHistoryReceipt = () => {
     const { session_id } = useParams();
@@ -102,8 +103,6 @@ const OrderHistoryReceipt = () => {
         return <div>No order details found.</div>;
     }
 
-    const TAX_RATE = 0.18;
-
     function ccyFormat(num) {
         return `${num.toFixed(2)}`;
     }
@@ -114,14 +113,8 @@ const OrderHistoryReceipt = () => {
 
     function createRow(desc, unit) {
         const price = priceRow(unit);
-        return { desc, unit, price };
+        return { desc, price };
     }
-
-    // const rows = [
-    //     createRow('Paperclips (Box)', 1.15),
-    //     createRow('Paper (Case)', 45.99),
-    //     createRow('Waste Basket', 17.99),
-    // ];
 
     console.log(orderDetails)
 
@@ -152,7 +145,7 @@ const OrderHistoryReceipt = () => {
                         />
 
                         <div className="flex items-center mt-4 sm:mt-0">
-                            <h4 className="text-sm sm:text-base">Order No:</h4>
+                            <h4 className="text-sm text-[#808080] sm:text-base">Order No:</h4>
                             <h2 className="font-semibold ml-2 text-sm sm:text-lg">
                                 #{orderDetails.created}
                             </h2>
@@ -193,14 +186,9 @@ const OrderHistoryReceipt = () => {
                                                 align="right"
                                                 sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}
                                             >
-                                                Unit Price
+                                                Price
                                             </TableCell>
-                                            <TableCell
-                                                align="right"
-                                                sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}
-                                            >
-                                                Total
-                                            </TableCell>
+
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -210,20 +198,28 @@ const OrderHistoryReceipt = () => {
                                                 <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                                                     {item.newPrice}
                                                 </TableCell>
-                                                <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                                                    {ccyFormat(item.newPrice)}
-                                                </TableCell>
+
                                             </TableRow>
                                         ))}
 
                                         <TableRow>
-                                            <TableCell rowSpan={2} />
-                                            <TableCell colSpan={1} sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                                                Total ({orderDetails.payment_status})
-                                                {/* <Chip variant="gradient" value="chip gradient" className="rounded-full" /> */}
+                                            {/* <TableCell colSpan={2} /> */}
+                                            <TableCell sx={{ fontWeight: 'bold', fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                                <div className="flex items-center gap-2">
+                                                    <div>
+                                                        Total
+                                                    </div>
+                                                    <Chip variant="outlined" color="green" value={orderDetails.payment_status} className="rounded-full" />
+                                                </div>
+
                                             </TableCell>
                                             <TableCell align="right" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
-                                                {ccyFormat(invoiceSubtotal)}
+                                                <div className='flex items-center justify-end gap-2'>
+                                                    <Chip variant="outlined" value={orderDetails.currency} className="rounded-full" />
+                                                    <div>
+                                                        {ccyFormat(invoiceSubtotal)}
+                                                    </div>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
 
@@ -245,12 +241,17 @@ const OrderHistoryReceipt = () => {
                                 <p className='font-normal text-sm'> {orderDetails.customer_details.name}, {orderDetails.customer_details.address.line1}, {orderDetails.customer_details.address.line2}, {orderDetails.customer_details.address.city}, {orderDetails.customer_details.address.state}, {orderDetails.customer_details.address.country}, {orderDetails.customer_details.address.postal_code}</p>
                             </div>
                         </div>
+
+                        <div className='mt-5'>
+                            <h1 className='font-medium text-[#808080]'>Hope to see you soon,</h1>
+                            <p className='font-medium '>BookStore Team</p>
+                        </div>
                     </div>
 
                     {/* Footer Section */}
                     <div className="px-4 py-2 sm:py-4 text-center bg-[#f5f5f5] rounded-b-md">
                         <p className="text-xs sm:text-sm">
-                            Thank you for shopping with us!
+                            Thank you for shopping with us! <Link className="text-[#1c5bad]" to="/">Back to Home</Link>
                         </p>
                     </div>
                 </div>
