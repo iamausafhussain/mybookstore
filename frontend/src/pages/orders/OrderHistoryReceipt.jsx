@@ -12,13 +12,16 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useFetchBooksByProductIdMutation } from '../../redux/features/book/bookSlice';
 import { Chip } from "@material-tailwind/react";
+import { useRef } from "react";
 
 const OrderHistoryReceipt = () => {
     const { session_id } = useParams();
+    const [order, setOrder] = useState(null); // Initialize as null to avoid unnecessary triggers
     const [productsIds, setProductsIds] = useState([]);
     const [requestBody, setRequestBody] = useState(null);
     const [products, setProducts] = useState([]);
     const [addOrder] = useAddOrderMutation();
+    const isOrderAddedRef = useRef(false); // Ref to track if the order has been added
     const { data: orderDetails, isLoading, isError } = useFetchSessionDetailsQuery(session_id, {
         skip: !session_id,
     });
@@ -40,7 +43,7 @@ const OrderHistoryReceipt = () => {
 
     useEffect(() => {
         if (orderDetails && !isLoading && !isError) {
-            const order = {
+            const newOrder = {
                 id: orderDetails.id,
                 amount_subtotal: orderDetails.amount_subtotal / 100,
                 amount_total: orderDetails.amount_total / 100,
@@ -69,27 +72,39 @@ const OrderHistoryReceipt = () => {
                 status: orderDetails.status,
             };
 
-            addOrder(order)
-                .unwrap()
-                .then((res) => {
-                    console.log('Order added successfully: ', res);
-                })
-                .catch((err) => {
-                    console.error('Failed to add order: ', err);
-                });
+            setOrder(newOrder);
         }
 
         if (requestBody && productsIds.length > 0) {
             fetchBooksByProductId(requestBody)
                 .unwrap()
                 .then((res) => {
-                    setProducts(res)
+                    setProducts(res);
                 })
                 .catch((err) => {
                     console.error("Failed to fetch books:", err);
                 });
         }
-    }, [orderDetails, isLoading, isError, addOrder, requestBody, productsIds, fetchBooksByProductId]);
+    }, [orderDetails, isLoading, isError, requestBody, productsIds, fetchBooksByProductId]);
+
+    const handleAddOrder = () => {
+        if (order && !isOrderAddedRef.current) {
+            isOrderAddedRef.current = true; // Mark the order as added
+            addOrder(order)
+                .unwrap()
+                .then((res) => {
+                    console.log("Order added successfully: ", res);
+                })
+                .catch((err) => {
+                    console.error("Failed to add order: ", err);
+                    isOrderAddedRef.current = false; // Reset in case of failure
+                });
+        }
+    };
+
+    useEffect(() => {
+        handleAddOrder(); // Call the function to add the order
+    }, [order]); // Trigger only when `order` is updated
 
     if (isLoading || isProductsLoading) {
         return <div>Loading...</div>;

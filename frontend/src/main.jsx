@@ -7,16 +7,19 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store';
 import { AuthProvide } from './context/AuthContext'
 import { CustomSnackbarProvider } from './context/SnackbarContext';
+import React from 'react';
 
 createRoot(document.getElementById('root')).render(
-  <CustomSnackbarProvider>
-    <AuthProvide>
-      <Provider store={store}>
-        <KBarWrapper >
-          <RouterProvider router={router} />
-        </KBarWrapper>
-      </Provider>
-    </AuthProvide>
-  </CustomSnackbarProvider>
+  <React.StrictMode>
+    <CustomSnackbarProvider>
+      <AuthProvide>
+        <Provider store={store}>
+          <KBarWrapper >
+            <RouterProvider router={router} />
+          </KBarWrapper>
+        </Provider>
+      </AuthProvide>
+    </CustomSnackbarProvider>
+  </React.StrictMode>
   ,
 )

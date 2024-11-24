@@ -3,18 +3,21 @@ const Order = require('./order.model')
 const createOrder = async (req, res) => {
     try {
 
-        const isOrderExists = await Order.find({ id: req.body.id });
+        const isOrderExists = await Order.findOne({ id: req.body.id });
 
-        if (isOrderExists.length == 0) {
+        if (!isOrderExists) {
+            console.log("----------------Creating Order---------------------");
             const newOrder = await Order({ ...req.body });
             await newOrder.save();
+
             res.status(201).send({ message: "Order created successfully", order: newOrder })
         }
         else {
+            console.log("Order already present")
             return res.status(409).send({ message: "Order already present" });
         }
     } catch (error) {
-        console.error("Error creating order");
+        console.error("Error creating order", error);
         res.status(500).send({ message: "Failed to create a order. You might be missing some fields that are actually required!" })
     }
 }
